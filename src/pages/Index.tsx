@@ -1,17 +1,21 @@
-
 import { Layout } from "@/components/Layout";
 import { ContentCard } from "@/components/ContentCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { getFeaturedContent, getLatestContent, categoryIcons, categoryDescriptions, ContentCategory } from "@/lib/data";
+import {
+  getFeaturedContent,
+  getLatestContent,
+  categoryIcons,
+  categoryDescriptions,
+  ContentCategory,
+  categoryLabels,
+} from "@/lib/data";
 
 export default function Home() {
   const featuredContent = getFeaturedContent();
   const latestContent = getLatestContent(3);
-  
-  const categories: ContentCategory[] = [
-    'jailbreak', 'system-prompt', 'leak', 'tool', 'technique', 'document'
-  ];
+
+  const categories = Object.keys(categoryLabels) as ContentCategory[];
 
   return (
     <Layout>
@@ -45,14 +49,18 @@ export default function Home() {
           <h2 className="text-2xl font-bold mb-8 font-mono">Categories</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {categories.map((category) => (
-              <Link 
+              <Link
                 key={category}
                 to={`/browse?category=${category}`}
                 className="neo-blur p-4 flex flex-col h-full transition-all duration-300 hover:border-primary/40 hover:bg-black/60"
               >
                 <div className="text-3xl mb-2">{categoryIcons[category]}</div>
-                <h3 className="text-lg font-bold mb-1 font-mono">{category.replace('-', ' ')}</h3>
-                <p className="text-sm text-muted-foreground">{categoryDescriptions[category]}</p>
+                <h3 className="text-lg font-bold mb-1 font-mono">
+                  {category.replace("-", " ")}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {categoryDescriptions[category]}
+                </p>
               </Link>
             ))}
           </div>
@@ -96,10 +104,12 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-16 border-t border-border/40">
         <div className="container text-center">
-          <h2 className="text-2xl font-bold mb-6 font-mono">Contribute to the Library</h2>
+          <h2 className="text-2xl font-bold mb-6 font-mono">
+            Contribute to the Library
+          </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
-            Have a jailbreak technique, leaked document, or undocumented system prompt? 
-            Share it with the community anonymously.
+            Have a jailbreak technique, leaked document, or undocumented system
+            prompt? Share it with the community anonymously.
           </p>
           <Button size="lg" asChild>
             <Link to="/submit">Submit Content</Link>
