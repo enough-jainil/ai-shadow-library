@@ -3,12 +3,11 @@ import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { categoryLabels, ContentCategory } from "@/lib/data";
 import { useToast } from "@/components/ui/use-toast";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MarkdownEditor } from "@/components/MarkdownEditor";
 import ReactMarkdown from "react-markdown";
 
 export default function Submit() {
@@ -19,12 +18,11 @@ export default function Submit() {
   const [category, setCategory] = useState<ContentCategory | "">("");
   const [tags, setTags] = useState("");
   const [author, setAuthor] = useState("");
-  const [previewTab, setPreviewTab] = useState("edit");
+  const [showPreview, setShowPreview] = useState(false);
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Basic validation
     if (!title || !description || !content || !category) {
       toast({
         title: "Missing required fields",
@@ -34,20 +32,18 @@ export default function Submit() {
       return;
     }
     
-    // In a real application, this would send data to a server
     toast({
       title: "Content submitted",
       description: "Your content has been submitted for review.",
     });
     
-    // Reset form
     setTitle("");
     setDescription("");
     setContent("");
     setCategory("");
     setTags("");
     setAuthor("");
-    setPreviewTab("edit");
+    setShowPreview(false);
   };
   
   return (
@@ -95,52 +91,36 @@ export default function Submit() {
             
             <div className="space-y-2">
               <Label htmlFor="description">Short Description *</Label>
-              <Textarea
+              <Input
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Provide a brief description (max 200 characters)"
                 maxLength={200}
                 required
-                rows={2}
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="content">Content *</Label>
-              <div className="border rounded-md">
-                <Tabs value={previewTab} onValueChange={setPreviewTab}>
-                  <TabsList className="border-b rounded-none bg-transparent w-full justify-start">
-                    <TabsTrigger value="edit">Edit</TabsTrigger>
-                    <TabsTrigger value="preview">Preview</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="edit" className="p-0">
-                    <Textarea
-                      id="content"
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      placeholder="Enter content in Markdown format"
-                      required
-                      rows={12}
-                      className="border-0 focus-visible:ring-0"
-                    />
-                  </TabsContent>
-                  <TabsContent value="preview" className="p-4 min-h-[300px]">
-                    {content ? (
-                      <div className="markdown">
-                        <ReactMarkdown>{content}</ReactMarkdown>
-                      </div>
-                    ) : (
-                      <div className="text-muted-foreground italic">
-                        Nothing to preview yet
-                      </div>
-                    )}
-                  </TabsContent>
-                </Tabs>
+              <div className="flex justify-between items-center mb-2">
+                <Label htmlFor="content">Content *</Label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowPreview(!showPreview)}
+                >
+                  {showPreview ? "Edit" : "Preview"}
+                </Button>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Markdown formatting is supported. Use # for headings, * for lists, `code` for code, etc.
-              </p>
+              
+              {showPreview ? (
+                <div className="min-h-[300px] p-4 rounded-md border markdown">
+                  <ReactMarkdown>{content}</ReactMarkdown>
+                </div>
+              ) : (
+                <MarkdownEditor content={content} onChange={setContent} />
+              )}
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
