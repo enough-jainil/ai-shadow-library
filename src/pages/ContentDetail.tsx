@@ -121,7 +121,7 @@ export default function ContentDetail() {
                   <Copy className="h-4 w-4" />
                 )}
               </Button>
-              <div className="markdown whitespace-pre-wrap break-words">
+              <div className="markdown break-words">
                 <ReactMarkdown>{content.content}</ReactMarkdown>
               </div>
             </div>
