@@ -28,7 +28,11 @@ export type ContentItem = {
 };
 
 // Import markdown content as raw string
-import { cursorPromptAgentContent, cursorPromptChatContent } from "./imports";
+import {
+  cursorPromptAgentContent,
+  cursorPromptChatContent,
+  devinAiContent,
+} from "./imports";
 // Sample mock data
 export const mockContent: ContentItem[] = [
   {
@@ -51,6 +55,17 @@ export const mockContent: ContentItem[] = [
     tags: ["ai", "cursor", "prompt", "chat", "system-prompt"],
     author: "x1xhlol",
     createdAt: "2025-04-23",
+    featured: false,
+  },
+  {
+    id: "3",
+    title: "Devin AI",
+    description: "Devin AI",
+    content: devinAiContent,
+    category: "system-prompt",
+    tags: ["ai", "devin", "ai-agent", "system-prompt"],
+    author: "x1xhlol",
+    createdAt: "2025-04-17",
     featured: false,
   },
 ];
