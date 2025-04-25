@@ -133,11 +133,20 @@ export const getLatestContent = (limit: number = 5): ContentItem[] => {
     .slice(0, limit);
 };
 
+import { slugify } from "./utils";
+
+// Get a content item by slug
+export const getContentBySlug = (slug: string): ContentItem | undefined => {
+  return mockContent.find((item) => slugify(item.title) === slug);
+};
+
 // Get random content items (for related content)
 export const getRelatedContent = (
-  currentId: string,
+  currentSlug: string,
   limit: number = 3
 ): ContentItem[] => {
-  const filtered = mockContent.filter((item) => item.id !== currentId);
+  const filtered = mockContent.filter(
+    (item) => slugify(item.title) !== currentSlug
+  );
   return filtered.sort(() => 0.5 - Math.random()).slice(0, limit);
 };

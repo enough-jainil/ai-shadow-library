@@ -1,12 +1,12 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import {
-  getContentById,
+  getContentBySlug,
   getRelatedContent,
   categoryLabels,
   ContentItem,
 } from "@/lib/data";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getContentUrl } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ContentCard } from "@/components/ContentCard";
@@ -15,23 +15,30 @@ import ReactMarkdown from "react-markdown";
 import { Copy, Check } from "lucide-react";
 
 export default function ContentDetail() {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const [content, setContent] = useState<ContentItem | undefined>(undefined);
   const [relatedContent, setRelatedContent] = useState<ContentItem[]>([]);
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
-    if (id) {
-      const foundContent = getContentById(id);
+    if (slug) {
+      const foundContent = getContentBySlug(slug);
       setContent(foundContent);
       setIsCopied(false);
 
       if (foundContent) {
-        const related = getRelatedContent(id, 3);
+        // Redirect to the correct URL if needed
+        const correctUrl = getContentUrl(foundContent.title);
+        if (window.location.pathname !== correctUrl) {
+          navigate(correctUrl, { replace: true });
+        }
+
+        const related = getRelatedContent(slug, 3);
         setRelatedContent(related);
       }
     }
-  }, [id]);
+  }, [slug, navigate]);
 
   const handleCopy = async (text: string) => {
     try {

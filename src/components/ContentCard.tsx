@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ContentItem, categoryIcons } from "@/lib/data";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getContentUrl } from "@/lib/utils";
 
 interface ContentCardProps {
   item: ContentItem;
@@ -25,7 +25,7 @@ export function ContentCard({ item }: ContentCardProps) {
             </Badge>
             <CardTitle className="line-clamp-2">
               <Link
-                to={`/content/${item.id}`}
+                to={getContentUrl(item.title)}
                 className="hover:text-primary transition-colors"
               >
                 {item.title}
