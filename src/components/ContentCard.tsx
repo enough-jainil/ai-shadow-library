@@ -25,7 +25,7 @@ export function ContentCard({ item }: ContentCardProps) {
             </Badge>
             <CardTitle className="line-clamp-2">
               <Link
-                to={getContentUrl(item.title)}
+                to={getContentUrl(item.title, item.category)}
                 className="hover:text-primary transition-colors"
               >
                 {item.title}

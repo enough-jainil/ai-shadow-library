@@ -24,6 +24,6 @@ export function slugify(text: string): string {
 }
 
 // Centralized URL creation for content
-export function getContentUrl(title: string): string {
-  return `/content/${slugify(title)}`;
+export function getContentUrl(title: string, category: string): string {
+  return `/content/${category}/${slugify(title)}`;
 }

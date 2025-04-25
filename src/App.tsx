@@ -25,7 +25,10 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/browse" element={<Browse />} />
-            <Route path="/content/:slug" element={<ContentDetail />} />
+            <Route
+              path="/content/:category/:slug"
+              element={<ContentDetail />}
+            />
             <Route path="/submit" element={<Submit />} />
             <Route path="/about" element={<About />} />
             <Route path="*" element={<NotFound />} />

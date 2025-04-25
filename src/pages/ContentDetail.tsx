@@ -15,7 +15,7 @@ import ReactMarkdown from "react-markdown";
 import { Copy, Check } from "lucide-react";
 
 export default function ContentDetail() {
-  const { slug } = useParams<{ slug: string }>();
+  const { category, slug } = useParams<{ category: string; slug: string }>();
   const navigate = useNavigate();
   const [content, setContent] = useState<ContentItem | undefined>(undefined);
   const [relatedContent, setRelatedContent] = useState<ContentItem[]>([]);
@@ -29,7 +29,10 @@ export default function ContentDetail() {
 
       if (foundContent) {
         // Redirect to the correct URL if needed
-        const correctUrl = getContentUrl(foundContent.title);
+        const correctUrl = getContentUrl(
+          foundContent.title,
+          foundContent.category
+        );
         if (window.location.pathname !== correctUrl) {
           navigate(correctUrl, { replace: true });
         }
@@ -38,7 +41,7 @@ export default function ContentDetail() {
         setRelatedContent(related);
       }
     }
-  }, [slug, navigate]);
+  }, [slug, category, navigate]);
 
   const handleCopy = async (text: string) => {
     try {
