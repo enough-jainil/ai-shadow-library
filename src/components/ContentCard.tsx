@@ -1,6 +1,11 @@
-
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ContentItem, categoryIcons } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
@@ -16,10 +21,13 @@ export function ContentCard({ item }: ContentCardProps) {
         <div className="flex items-start justify-between">
           <div>
             <Badge variant="outline" className="mb-2">
-              {categoryIcons[item.category]} {item.category.replace('-', ' ')}
+              {categoryIcons[item.category]} {item.category.replace("-", " ")}
             </Badge>
             <CardTitle className="line-clamp-2">
-              <Link to={`/content/${item.id}`} className="hover:text-primary transition-colors">
+              <Link
+                to={`/content/${item.id}`}
+                className="hover:text-primary transition-colors"
+              >
                 {item.title}
               </Link>
             </CardTitle>
@@ -44,8 +52,8 @@ export function ContentCard({ item }: ContentCardProps) {
         </div>
         <div className="flex items-center gap-2 mt-2 sm:mt-0">
           <span>{formatDate(item.createdAt)}</span>
-          <span>•</span>
-          <span>{item.views} views</span>
+          {/* <span>•</span> */}
+          {/* <span>{item.views} views</span> */}
         </div>
       </CardFooter>
     </Card>

@@ -1,41 +1,10 @@
-import { title } from "process";
-
-// 1. Define the single source of truth for category data
-const CATEGORIES = {
-  jailbreak: {
-    label: "Jailbreak",
-    icon: "🔓",
-    description: "Methods to bypass AI safety measures and restrictions",
-  },
-  "system-prompt": {
-    label: "System Prompt",
-    icon: "⚙️",
-    description: "Prompts used to define AI system behavior",
-  },
-  leak: {
-    label: "Leaked Info",
-    icon: "📄",
-    description: "Leaked information about AI models and companies",
-  },
-  tool: {
-    label: "Tool",
-    icon: "🔧",
-    description: "Tools for working with or analyzing AI models",
-  },
-  technique: {
-    label: "Technique",
-    icon: "✨",
-    description: "Techniques for improved AI interactions",
-  },
-  document: {
-    label: "Document",
-    icon: "📑",
-    description: "Internal and technical documents",
-  },
-} as const; // Use 'as const' for stricter typing
-
-// 2. Derive the ContentCategory type from the keys of CATEGORIES
-export type ContentCategory = keyof typeof CATEGORIES;
+export type ContentCategory =
+  | "jailbreak"
+  | "system-prompt"
+  | "leak"
+  | "tool"
+  | "technique"
+  | "document";
 
 export type ContentItem = {
   id: string;
@@ -416,18 +385,32 @@ export const getAllTags = (items: ContentItem[]): string[] => {
   return Array.from(tagSet).sort();
 };
 
-// 4. Automatically generate categoryLabels, categoryIcons, and categoryDescriptions
-export const categoryLabels = Object.fromEntries(
-  Object.entries(CATEGORIES).map(([key, { label }]) => [key, label])
-) as Record<ContentCategory, string>;
+export const categoryLabels: Record<ContentCategory, string> = {
+  jailbreak: "Jailbreak",
+  "system-prompt": "System Prompt",
+  leak: "Leaked Info",
+  tool: "Tool",
+  technique: "Technique",
+  document: "Document",
+};
 
-export const categoryIcons = Object.fromEntries(
-  Object.entries(CATEGORIES).map(([key, { icon }]) => [key, icon])
-) as Record<ContentCategory, string>;
+export const categoryIcons: Record<ContentCategory, string> = {
+  jailbreak: "🔓",
+  "system-prompt": "⚙️",
+  leak: "📄",
+  tool: "🔧",
+  technique: "✨",
+  document: "📑",
+};
 
-export const categoryDescriptions = Object.fromEntries(
-  Object.entries(CATEGORIES).map(([key, { description }]) => [key, description])
-) as Record<ContentCategory, string>;
+export const categoryDescriptions: Record<ContentCategory, string> = {
+  jailbreak: "Methods to bypass AI safety measures and restrictions",
+  "system-prompt": "Prompts used to define AI system behavior",
+  leak: "Leaked information about AI models and companies",
+  tool: "Tools for working with or analyzing AI models",
+  technique: "Techniques for improved AI interactions",
+  document: "Internal and technical documents",
+};
 
 // Get a content item by ID
 export const getContentById = (id: string): ContentItem | undefined => {

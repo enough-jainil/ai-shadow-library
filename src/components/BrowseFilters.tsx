@@ -1,6 +1,10 @@
-
 import { useState } from "react";
-import { ContentCategory, categoryLabels, getAllTags, mockContent } from "@/lib/data";
+import {
+  ContentCategory,
+  categoryLabels,
+  getAllTags,
+  mockContent,
+} from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,18 +29,18 @@ export function BrowseFilters({
 }: BrowseFiltersProps) {
   const allTags = getAllTags(mockContent);
   const [tagFilter, setTagFilter] = useState("");
-  
-  const filteredTags = tagFilter 
-    ? allTags.filter(tag => tag.toLowerCase().includes(tagFilter.toLowerCase()))
+
+  const filteredTags = tagFilter
+    ? allTags.filter((tag) =>
+        tag.toLowerCase().includes(tagFilter.toLowerCase())
+      )
     : allTags;
 
-  const categories: ContentCategory[] = [
-    'jailbreak', 'system-prompt', 'leak', 'tool', 'technique', 'document'
-  ];
+  const categories = Object.keys(categoryLabels) as ContentCategory[];
 
   const toggleCategory = (category: ContentCategory) => {
     if (selectedCategories.includes(category)) {
-      setSelectedCategories(selectedCategories.filter(c => c !== category));
+      setSelectedCategories(selectedCategories.filter((c) => c !== category));
     } else {
       setSelectedCategories([...selectedCategories, category]);
     }
@@ -44,7 +48,7 @@ export function BrowseFilters({
 
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter(t => t !== tag));
+      setSelectedTags(selectedTags.filter((t) => t !== tag));
     } else {
       setSelectedTags([...selectedTags, tag]);
     }
@@ -62,7 +66,7 @@ export function BrowseFilters({
       <div>
         <h3 className="font-medium mb-2 text-sm tracking-tight">Search</h3>
         <div className="relative">
-          <Input 
+          <Input
             type="search"
             placeholder="Search prompts..."
             value={searchQuery}
@@ -71,14 +75,14 @@ export function BrowseFilters({
           />
         </div>
       </div>
-      
+
       <div>
         <div className="flex justify-between items-center mb-2">
           <h3 className="font-medium text-sm tracking-tight">Categories</h3>
           {selectedCategories.length > 0 && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setSelectedCategories([])}
               className="h-auto text-xs py-1"
             >
@@ -87,10 +91,12 @@ export function BrowseFilters({
           )}
         </div>
         <div className="flex flex-wrap gap-2">
-          {categories.map(category => (
-            <Badge 
+          {categories.map((category) => (
+            <Badge
               key={category}
-              variant={selectedCategories.includes(category) ? "default" : "outline"}
+              variant={
+                selectedCategories.includes(category) ? "default" : "outline"
+              }
               className="cursor-pointer"
               onClick={() => toggleCategory(category)}
             >
@@ -99,14 +105,14 @@ export function BrowseFilters({
           ))}
         </div>
       </div>
-      
+
       <div>
         <div className="flex justify-between items-center mb-2">
           <h3 className="font-medium text-sm tracking-tight">Tags</h3>
           {selectedTags.length > 0 && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setSelectedTags([])}
               className="h-auto text-xs py-1"
             >
@@ -114,7 +120,7 @@ export function BrowseFilters({
             </Button>
           )}
         </div>
-        <Input 
+        <Input
           type="search"
           placeholder="Filter tags..."
           value={tagFilter}
@@ -123,8 +129,8 @@ export function BrowseFilters({
         />
         <ScrollArea className="h-[180px]">
           <div className="flex flex-wrap gap-2">
-            {filteredTags.map(tag => (
-              <Badge 
+            {filteredTags.map((tag) => (
+              <Badge
                 key={tag}
                 variant={selectedTags.includes(tag) ? "default" : "outline"}
                 className="cursor-pointer"
@@ -136,11 +142,13 @@ export function BrowseFilters({
           </div>
         </ScrollArea>
       </div>
-      
-      {(selectedCategories.length > 0 || selectedTags.length > 0 || searchQuery) && (
-        <Button 
-          variant="outline" 
-          size="sm" 
+
+      {(selectedCategories.length > 0 ||
+        selectedTags.length > 0 ||
+        searchQuery) && (
+        <Button
+          variant="outline"
+          size="sm"
           onClick={clearFilters}
           className="w-full"
         >

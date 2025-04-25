@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -23,11 +22,13 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-primary glow-text text-2xl font-mono font-bold">AI</span>
+            <span className="text-primary glow-text text-2xl font-mono font-bold">
+              AI
+            </span>
             <span className="font-mono text-xl">Shadow_Library</span>
           </Link>
         </div>
-        
+
         <div className="flex-1 mx-4 max-w-md hidden sm:block">
           <form onSubmit={handleSearch} className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -40,7 +41,7 @@ export function Header() {
             />
           </form>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <Button variant="ghost" className="hidden sm:flex" asChild>
             <Link to="/browse">Browse</Link>
@@ -48,9 +49,9 @@ export function Header() {
           <Button variant="ghost" className="hidden sm:flex" asChild>
             <Link to="/submit">Submit</Link>
           </Button>
-          <Button variant="default" className="hidden sm:flex" asChild>
+          {/* <Button variant="default" className="hidden sm:flex" asChild>
             <Link to="/browse?category=jailbreak">Jailbreaks</Link>
-          </Button>
+          </Button> */}
           <ThemeToggle />
         </div>
       </div>
