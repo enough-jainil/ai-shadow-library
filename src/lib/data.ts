@@ -28,7 +28,7 @@ export type ContentItem = {
 };
 
 // Import markdown content as raw string
-import { cursorPromptAgentContent } from "./imports";
+import { cursorPromptAgentContent, cursorPromptChatContent } from "./imports";
 // Sample mock data
 export const mockContent: ContentItem[] = [
   {
@@ -38,8 +38,19 @@ export const mockContent: ContentItem[] = [
     content: cursorPromptAgentContent,
     category: "system-prompt",
     tags: ["ai", "cursor", "prompt", "agent", "system-prompt"],
-    author: "John Doe",
-    createdAt: "2023-01-01",
+    author: "x1xhlol",
+    createdAt: "2025-03-26",
+    featured: false,
+  },
+  {
+    id: "2",
+    title: "Cursor Prompt(chat)",
+    description: "Methods to bypass AI safety measures and restrictions",
+    content: cursorPromptChatContent,
+    category: "system-prompt",
+    tags: ["ai", "cursor", "prompt", "chat", "system-prompt"],
+    author: "x1xhlol",
+    createdAt: "2025-04-23",
     featured: false,
   },
 ];

@@ -1,0 +1,24 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Structure Overview
+
+This is a React project built with Vite and TypeScript.
+
+- **Main Entry Point**: The application starts in [`src/main.tsx`](mdc:src/main.tsx), which renders the main [`src/App.tsx`](mdc:src/App.tsx) component.
+- **Root Component**: [`src/App.tsx`](mdc:src/App.tsx) likely sets up routing and global layout.
+- **Pages**: Application pages are located in the [`src/pages/`](mdc:src/pages) directory.
+- **Components**: Reusable UI components are found in [`src/components/`](mdc:src/components).
+- **Hooks**: Custom React hooks reside in [`src/hooks/`](mdc:src/hooks).
+- **Utilities**: Helper functions and utilities are likely in [`src/lib/`](mdc:src/lib).
+- **Providers**: Context providers or state management logic can be found in [`src/providers/`](mdc:src/providers).
+- **Configuration**:
+    - Vite: [`vite.config.ts`](mdc:vite.config.ts)
+    - TypeScript: [`tsconfig.json`](mdc:tsconfig.json), [`tsconfig.app.json`](mdc:tsconfig.app.json), [`tsconfig.node.json`](mdc:tsconfig.node.json)
+    - Tailwind CSS: [`tailwind.config.ts`](mdc:tailwind.config.ts)
+    - ESLint: [`eslint.config.js`](mdc:eslint.config.js)
+- **Static Assets**: Served from the [`public/`](mdc:public) directory.
+- **HTML Entry**: The main HTML file is [`index.html`](mdc:index.html).
+
