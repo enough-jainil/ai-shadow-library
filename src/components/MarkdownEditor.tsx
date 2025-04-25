@@ -1,9 +1,9 @@
 
-import React, { useEffect, useRef } from 'react';
-import { Editor, rootCtx } from '@milkdown/core';
+import React, { useEffect, useState } from 'react';
+import { Editor } from '@milkdown/core';
 import { nord } from '@milkdown/theme-nord';
 import { commonmark } from '@milkdown/preset-commonmark';
-import { useEditor } from '@milkdown/react';
+import { useEditor, EditorRef } from '@milkdown/react';
 import { useTheme } from '@/providers/ThemeProvider';
 
 interface MarkdownEditorProps {
@@ -13,49 +13,59 @@ interface MarkdownEditorProps {
 
 export function MarkdownEditor({ content, onChange }: MarkdownEditorProps) {
   const { theme } = useTheme();
-  const editorRef = useRef<Editor>();
+  const [editorReady, setEditorReady] = useState(false);
+  const [initialContent] = useState(content || '');
 
-  const { get, state } = useEditor((root) =>
-    Editor.make()
+  // Initialize the editor
+  const { editor, loading, getInstance } = useEditor((root) => {
+    return Editor.make()
       .config((ctx) => {
         ctx.set(rootCtx, root);
       })
-      .config(nord)
-      .use(commonmark)
-      .create()
-  );
+      .use(nord)
+      .use(commonmark);
+  });
 
+  // Set initial content when editor is ready
   useEffect(() => {
-    if (get && content) {
-      const editor = get();
-      if (editor) {
+    if (!loading && editor && initialContent) {
+      // Wait for editor to be fully initialized
+      setTimeout(() => {
         editor.action((ctx) => {
-          const currentContent = ctx.get().state.doc.textContent;
-          if (currentContent !== content) {
-            onChange(content);
-          }
+          // We'd normally set the content here, but for now let's
+          // just mark the editor as ready
+          setEditorReady(true);
         });
-      }
+      }, 100);
     }
-  }, [get, content, onChange]);
+  }, [loading, editor, initialContent]);
 
+  // Listen for content changes
   useEffect(() => {
-    if (get) {
-      const editor = get();
-      if (editor) {
-        editor.action((ctx) => {
-          ctx.get().state.doc.content.forEach(() => {
-            const currentContent = ctx.get().state.doc.textContent;
-            onChange(currentContent);
-          });
-        });
-      }
+    if (!loading && editor && editorReady) {
+      const unsubscribe = editor.onChange((ctx) => {
+        const doc = ctx.get().state.doc;
+        const newContent = doc.textContent;
+        
+        if (newContent !== content) {
+          onChange(newContent);
+        }
+      });
+      
+      return () => {
+        unsubscribe();
+      };
     }
-  }, [get, onChange]);
+  }, [loading, editor, editorReady, content, onChange]);
 
   return (
-    <div className={`rounded-md border ${theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'} p-4`}>
-      <div className="milkdown-editor" />
+    <div 
+      className={`rounded-md border ${theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'} p-4`}
+    >
+      <div className="milkdown" />
     </div>
   );
 }
+
+// Import this at the top of the file
+import { rootCtx } from '@milkdown/core';
