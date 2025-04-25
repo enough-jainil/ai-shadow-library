@@ -27,8 +27,22 @@ export type ContentItem = {
   featured?: boolean;
 };
 
+// Import markdown content as raw string
+import { cursorPromptAgentContent } from "./imports";
 // Sample mock data
-export const mockContent: ContentItem[] = [];
+export const mockContent: ContentItem[] = [
+  {
+    id: "1",
+    title: "Cursor Prompt(agent)",
+    description: "Methods to bypass AI safety measures and restrictions",
+    content: cursorPromptAgentContent,
+    category: "system-prompt",
+    tags: ["ai", "cursor", "prompt", "agent", "system-prompt"],
+    author: "John Doe",
+    createdAt: "2023-01-01",
+    featured: false,
+  },
+];
 
 // Filter functions for searching and filtering content
 export const searchContent = (
