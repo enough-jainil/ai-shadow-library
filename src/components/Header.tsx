@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -52,7 +51,6 @@ export function Header() {
           {/* <Button variant="default" className="hidden sm:flex" asChild>
             <Link to="/browse?category=jailbreak">Jailbreaks</Link>
           </Button> */}
-          <ThemeToggle />
         </div>
       </div>
 
