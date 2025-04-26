@@ -11,6 +11,7 @@ import ContentDetail from "./pages/ContentDetail";
 import Submit from "./pages/Submit";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import GitHubCallback from "./pages/GitHubCallback";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/content/:category/:slug" element={<ContentDetail />} />
           <Route path="/submit" element={<Submit />} />
           <Route path="/about" element={<About />} />
+          <Route path="/auth/github/callback" element={<GitHubCallback />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
