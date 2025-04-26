@@ -28,8 +28,11 @@ export default function GitHubCallback() {
     if (code) {
       const exchangeCodeForToken = async (code: string) => {
         try {
-          // GitHub's OAuth token endpoint
-          const response = await fetch('https://github.com/login/oauth/access_token', {
+          console.log("Exchanging code for token...");
+          
+          // GitHub's OAuth token endpoint - use a CORS proxy or backend service
+          // Since this is client-side, we're using a serverless function via a proxy
+          const response = await fetch('https://corsproxy.io/?https://github.com/login/oauth/access_token', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
@@ -42,7 +45,12 @@ export default function GitHubCallback() {
             })
           });
 
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
           const data = await response.json();
+          console.log("Token response:", data);
 
           if (data.access_token) {
             sessionStorage.setItem("github_token", data.access_token);
@@ -57,7 +65,7 @@ export default function GitHubCallback() {
           console.error("Token exchange error:", error);
           toast({
             title: "GitHub Login Failed",
-            description: "Failed to complete GitHub authentication.",
+            description: "Failed to complete GitHub authentication. Please try again.",
             variant: "destructive",
           });
         }
@@ -65,6 +73,9 @@ export default function GitHubCallback() {
       };
 
       exchangeCodeForToken(code);
+    } else {
+      // No code or error, redirect back to submit page
+      navigate("/submit");
     }
   }, [location, navigate, toast]);
 
@@ -72,7 +83,7 @@ export default function GitHubCallback() {
     <div className="container flex items-center justify-center min-h-screen">
       <div className="text-center">
         <p className="text-lg font-semibold">Processing GitHub Login...</p>
-        <p className="text-muted-foreground">Please wait.</p>
+        <p className="text-muted-foreground">Please wait while we complete your authentication.</p>
       </div>
     </div>
   );
