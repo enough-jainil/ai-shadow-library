@@ -25,6 +25,7 @@ export type ContentItem = {
   author: string;
   createdAt: string;
   featured?: boolean;
+  views?: number; // Add views as an optional property
 };
 
 // Import markdown content as raw string
@@ -144,9 +145,19 @@ export const getFeaturedContent = (): ContentItem[] => {
   return mockContent.filter((item) => item.featured);
 };
 
-// Get most viewed content items
+// Get most viewed content items (since views might not be available on all items, we will sort by createdAt as fallback)
 export const getMostViewedContent = (limit: number = 5): ContentItem[] => {
-  return [...mockContent].sort((a, b) => b.views - a.views).slice(0, limit);
+  // Use a fallback sorting method if views is not available
+  return [...mockContent]
+    .sort((a, b) => {
+      // If both items have views, sort by views
+      if (a.views !== undefined && b.views !== undefined) {
+        return b.views - a.views;
+      }
+      // Otherwise, sort by date as fallback
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    })
+    .slice(0, limit);
 };
 
 // Get most recent content items
