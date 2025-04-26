@@ -16,6 +16,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReactMarkdown from "react-markdown";
 import { Github } from "lucide-react";
+import { useGitHub } from "@/hooks/useGitHub";
 
 export default function Submit() {
   const { toast } = useToast();
@@ -77,6 +78,8 @@ export default function Submit() {
     }
   }, [gitHubToken]);
 
+  const { isAuthenticated, createDiscussion, isLoading } = useGitHub();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -89,30 +92,40 @@ export default function Submit() {
       return;
     }
 
-    if (!isGitHubAuthenticated || !gitHubToken) {
+    if (!isAuthenticated) {
       toast({
         title: "GitHub Login Required",
-        description:
-          "Please log in with GitHub to submit and create a discussion.",
+        description: "Please log in with GitHub to submit content.",
         variant: "destructive",
       });
       return;
     }
 
-    console.log("Attempting to create discussion with token:", gitHubToken);
-    toast({
-      title: "Content Submitted (Discussion Pending)",
-      description:
-        "Your content has been submitted. Discussion creation via API needs implementation.",
-    });
+    const discussionBody = `
+## Description
+${description}
 
-    setTitle("");
-    setDescription("");
-    setContent("");
-    setCategory("");
-    setTags("");
-    setAuthor("");
-    setPreviewTab("edit");
+## Category
+${category}
+
+## Content
+${content}
+
+${tags ? `## Tags\n${tags}` : ''}
+${author ? `## Author\n${author}` : 'Anonymous'}
+    `.trim();
+
+    const result = await createDiscussion(title, discussionBody, category);
+    
+    if (result) {
+      setTitle("");
+      setDescription("");
+      setContent("");
+      setCategory("");
+      setTags("");
+      setAuthor("");
+      setPreviewTab("edit");
+    }
   };
 
   // Define a simple type for the GitHub user
