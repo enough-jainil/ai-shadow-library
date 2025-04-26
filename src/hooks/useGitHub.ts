@@ -21,21 +21,28 @@ export function useGitHub() {
 
     setIsLoading(true);
     try {
-      const response = await octokit.graphql(`
-        mutation {
-          createDiscussion(input: {
-            repositoryId: "R_kgDOLFkH4g",
-            categoryId: "DIC_kwDOLFkH4M4CcMYu",
-            title: "${title}",
-            body: "${body}"
-          }) {
-            discussion {
-              id
-              url
+      // Using the proper variable-based GraphQL mutation to avoid escaping issues
+      const response = await octokit.graphql({
+        query: `
+          mutation createDiscussion($repositoryId: ID!, $categoryId: ID!, $title: String!, $body: String!) {
+            createDiscussion(input: {
+              repositoryId: $repositoryId,
+              categoryId: $categoryId,
+              title: $title,
+              body: $body
+            }) {
+              discussion {
+                id
+                url
+              }
             }
           }
-        }
-      `);
+        `,
+        repositoryId: "R_kgDOLFkH4g",
+        categoryId: "DIC_kwDOLFkH4M4CcMYu", 
+        title,
+        body
+      });
 
       toast({
         title: "Discussion Created",

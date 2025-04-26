@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { Input } from "@/components/ui/input";
@@ -15,8 +16,9 @@ import { categoryLabels, ContentCategory } from "@/lib/data";
 import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReactMarkdown from "react-markdown";
-import { Github } from "lucide-react";
+import { Github, Loader2 } from "lucide-react";
 import { useGitHub } from "@/hooks/useGitHub";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function Submit() {
   const { toast } = useToast();
@@ -30,9 +32,10 @@ export default function Submit() {
   const [isGitHubAuthenticated, setIsGitHubAuthenticated] = useState(false);
   const [gitHubToken, setGitHubToken] = useState<string | null>(null);
   const [gitHubUser, setGitHubUser] = useState<GitHubUser | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const GITHUB_CLIENT_ID = "Ov23libTNf3lYbpKBN8f";
-  const REDIRECT_URI = "http://localhost:8080/auth/github/callback";
+  const REDIRECT_URI = window.location.origin + "/auth/github/callback";
 
   const handleGitHubLogin = () => {
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(
@@ -82,6 +85,7 @@ export default function Submit() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
 
     if (!title || !description || !content || !category) {
       toast({
@@ -115,16 +119,23 @@ ${tags ? `## Tags\n${tags}` : ''}
 ${author ? `## Author\n${author}` : 'Anonymous'}
     `.trim();
 
-    const result = await createDiscussion(title, discussionBody, category);
-    
-    if (result) {
-      setTitle("");
-      setDescription("");
-      setContent("");
-      setCategory("");
-      setTags("");
-      setAuthor("");
-      setPreviewTab("edit");
+    try {
+      const result = await createDiscussion(title, discussionBody, category);
+      
+      if (result) {
+        setTitle("");
+        setDescription("");
+        setContent("");
+        setCategory("");
+        setTags("");
+        setAuthor("");
+        setPreviewTab("edit");
+      } else {
+        setSubmitError("Failed to create discussion. Please try again or contact support.");
+      }
+    } catch (error) {
+      console.error("Error submitting content:", error);
+      setSubmitError("An unexpected error occurred. Please try again or contact support.");
     }
   };
 
@@ -149,6 +160,13 @@ ${author ? `## Author\n${author}` : 'Anonymous'}
               educational and provide value to researchers and enthusiasts.
             </p>
           </div>
+
+          {submitError && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{submitError}</AlertDescription>
+            </Alert>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -298,11 +316,18 @@ ${author ? `## Author\n${author}` : 'Anonymous'}
               <Button
                 type="submit"
                 className="w-full md:w-auto"
-                disabled={!isGitHubAuthenticated}
+                disabled={!isGitHubAuthenticated || isLoading}
               >
-                {isGitHubAuthenticated
-                  ? "Submit Content & Create Discussion"
-                  : "Submit Content (Login Required)"}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Submitting...
+                  </>
+                ) : isGitHubAuthenticated ? (
+                  "Submit Content & Create Discussion"
+                ) : (
+                  "Submit Content (Login Required)"
+                )}
               </Button>
             </div>
           </form>
