@@ -1,15 +1,24 @@
 
 import { Link } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, Github, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useGitHubAuthContext } from "@/components/GitHubAuthProvider";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const { user, login, logout, isLoading } = useGitHubAuthContext();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,9 +60,40 @@ export function Header() {
           <Button variant="ghost" className="hidden sm:flex" asChild>
             <Link to="/submit">Submit</Link>
           </Button>
-          {/* <Button variant="default" className="hidden sm:flex" asChild>
-            <Link to="/browse?category=jailbreak">Jailbreaks</Link>
-          </Button> */}
+          
+          {isLoading ? (
+            <Button variant="ghost" disabled>
+              <span className="animate-pulse">Loading...</span>
+            </Button>
+          ) : user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.avatar_url} alt={user.login} />
+                    <AvatarFallback>{user.login?.substring(0, 2).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="cursor-pointer">Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/bookmarks" className="cursor-pointer">Bookmarks</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={logout} className="cursor-pointer">
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button variant="outline" onClick={login} className="gap-2">
+              <Github className="h-4 w-4" />
+              <span className="hidden sm:inline">Login with GitHub</span>
+              <span className="sm:hidden">Login</span>
+            </Button>
+          )}
         </div>
       </div>
 

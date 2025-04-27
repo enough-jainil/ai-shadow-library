@@ -2,13 +2,17 @@
 import { Octokit } from '@octokit/rest';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { isContentBookmarked, addBookmark, removeBookmark } from '@/lib/bookmarkService';
+import { useGitHubAuthContext } from '@/components/GitHubAuthProvider';
 
 export function useGitHub() {
   const [isLoading, setIsLoading] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const { toast } = useToast();
   const [token, setToken] = useState<string | null>(null);
   const [octokit, setOctokit] = useState<Octokit | null>(null);
+  const { user, isAuthenticated } = useGitHubAuthContext();
 
   // Check for token on mount and token changes
   useEffect(() => {
@@ -17,12 +21,73 @@ export function useGitHub() {
     
     if (storedToken) {
       setOctokit(new Octokit({ auth: storedToken }));
-      setIsAuthenticated(true);
     } else {
       setOctokit(null);
-      setIsAuthenticated(false);
     }
   }, []);
+
+  const checkBookmarkStatus = async (contentId: string) => {
+    if (!user) return;
+    
+    try {
+      setIsBookmarkLoading(true);
+      const bookmarked = await isContentBookmarked(user.id.toString(), contentId);
+      setIsBookmarked(bookmarked);
+    } catch (error) {
+      console.error('Error checking bookmark status:', error);
+    } finally {
+      setIsBookmarkLoading(false);
+    }
+  };
+
+  const toggleBookmark = async (contentId: string) => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please login to bookmark content",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    try {
+      setIsBookmarkLoading(true);
+      let success;
+      
+      if (isBookmarked) {
+        success = await removeBookmark(user.id.toString(), contentId);
+        if (success) {
+          setIsBookmarked(false);
+          toast({
+            title: "Bookmark Removed",
+            description: "Content has been removed from your bookmarks",
+          });
+        }
+      } else {
+        success = await addBookmark(user.id.toString(), contentId);
+        if (success) {
+          setIsBookmarked(true);
+          toast({
+            title: "Bookmark Added",
+            description: "Content has been added to your bookmarks",
+          });
+        }
+      }
+      
+      if (!success) {
+        throw new Error("Failed to update bookmark");
+      }
+    } catch (error) {
+      console.error('Error updating bookmark:', error);
+      toast({
+        title: "Bookmark Error",
+        description: "Failed to update bookmark status",
+        variant: "destructive",
+      });
+    } finally {
+      setIsBookmarkLoading(false);
+    }
+  };
 
   const createDiscussion = async (title: string, body: string, category: string) => {
     if (!octokit) {
@@ -90,5 +155,9 @@ export function useGitHub() {
     createDiscussion,
     isAuthenticated,
     token,
+    isBookmarked,
+    isBookmarkLoading,
+    toggleBookmark,
+    checkBookmarkStatus,
   };
 }
