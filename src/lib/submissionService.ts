@@ -21,7 +21,7 @@ export async function submitContent(submission: Omit<Submission, 'createdAt' | '
     const newSubmission = {
       ...submission,
       createdAt: new Date(),
-      status: 'pending'
+      status: 'pending' as const
     };
     
     const result = await submissionsCollection.insertOne(newSubmission);
@@ -40,7 +40,8 @@ export async function getUserSubmissions(authorId: string): Promise<Submission[]
     
     const submissions = await submissionsCollection.find({ authorId }).toArray();
     
-    return submissions as Submission[];
+    // Type assertion to fix TypeScript error
+    return submissions as unknown as Submission[];
   } catch (error) {
     console.error('Error getting user submissions:', error);
     return [];

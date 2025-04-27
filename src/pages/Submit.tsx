@@ -1,4 +1,3 @@
-
 import { Layout } from "@/components/Layout";
 import { useGitHubAuthContext } from "@/components/GitHubAuthProvider";
 import { useState } from "react";
@@ -24,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { categoryLabels } from "@/lib/data";
-import { submitContent } from "@/lib/submissionService";
+import { submitContent, Submission } from "@/lib/submissionService";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -33,7 +32,12 @@ const formSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters"),
   content: z.string().min(50, "Content must be at least 50 characters"),
   category: z.string(),
-  tags: z.string().transform(val => val.split(",").map(tag => tag.trim()).filter(tag => tag)),
+  tags: z.string()
+    .transform(val => 
+      val.split(",")
+        .map(tag => tag.trim())
+        .filter(tag => tag)
+    ),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -67,11 +71,17 @@ export default function Submit() {
 
     setIsSubmitting(true);
     try {
-      const submissionId = await submitContent({
-        ...data,
+      const submissionData: Omit<Submission, "createdAt" | "status"> = {
+        title: data.title,
+        description: data.description,
+        content: data.content,
+        category: data.category,
+        tags: data.tags,
         author: user.login,
         authorId: user.id.toString(),
-      });
+      };
+      
+      const submissionId = await submitContent(submissionData);
 
       if (submissionId) {
         toast({

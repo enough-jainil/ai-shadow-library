@@ -12,7 +12,9 @@ export function useGitHub() {
   const { toast } = useToast();
   const [token, setToken] = useState<string | null>(null);
   const [octokit, setOctokit] = useState<Octokit | null>(null);
-  const { user, isAuthenticated } = useGitHubAuthContext();
+  const { user } = useGitHubAuthContext();
+  // Derive isAuthenticated from user
+  const isAuthenticated = !!user;
 
   // Check for token on mount and token changes
   useEffect(() => {

@@ -7,6 +7,11 @@ import { ContentItem, getContentById } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { ContentCard } from "@/components/ContentCard";
 
+// Define props interface to match ContentCard's expected props
+interface ContentCardProps {
+  content: ContentItem;
+}
+
 export default function Bookmarks() {
   const { user, login, isLoading: isAuthLoading } = useGitHubAuthContext();
   const [bookmarkedContent, setBookmarkedContent] = useState<ContentItem[]>([]);

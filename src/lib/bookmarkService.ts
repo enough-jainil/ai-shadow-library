@@ -54,7 +54,7 @@ export async function getUserBookmarks(userId: string): Promise<string[]> {
     
     const bookmarks = await bookmarksCollection.find({ userId }).toArray();
     
-    return bookmarks.map(bookmark => bookmark.contentId);
+    return bookmarks.map((bookmark: any) => bookmark.contentId);
   } catch (error) {
     console.error('Error getting user bookmarks:', error);
     return [];

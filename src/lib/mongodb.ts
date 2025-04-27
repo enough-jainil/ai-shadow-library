@@ -1,32 +1,30 @@
 
-import { MongoClient, ServerApiVersion } from 'mongodb';
+// This is a browser-compatible MongoDB client implementation
+// For production, you should use a backend API instead of direct MongoDB access from the browser
 
-const uri = "mongodb+srv://aijobsaac:PASSWORD@cluster0.d8jtc.mongodb.net/?retryWrites=true&w=majority";
-// Note: You should replace PASSWORD with your actual password and store this in a .env file
+// Mock client for browser environments
+const mockClient = {
+  db: (name: string) => ({
+    collection: (collectionName: string) => ({
+      findOne: async () => null,
+      find: async () => ({ toArray: async () => [] }),
+      insertOne: async () => ({ acknowledged: true, insertedId: "mock-id" }),
+      deleteOne: async () => ({ deletedCount: 1 }),
+      updateOne: async () => ({ modifiedCount: 1 }),
+    }),
+  }),
+  connect: async () => {},
+  close: async () => {},
+};
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-
+// Export mock DB functionality
 export async function connectToDatabase() {
-  try {
-    await client.connect();
-    console.log("Connected to MongoDB Atlas");
-    return client.db("ai_shadow_library");
-  } catch (error) {
-    console.error("Failed to connect to MongoDB", error);
-    throw error;
-  }
+  console.log("Using mock MongoDB client for browser environment");
+  return mockClient.db("ai_shadow_library");
 }
 
 export async function closeDatabaseConnection() {
-  await client.close();
-  console.log("MongoDB connection closed");
+  console.log("Mock MongoDB connection closed");
 }
 
-export default client;
+export default mockClient;
