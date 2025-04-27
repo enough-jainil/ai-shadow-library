@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import {
   Card,
@@ -15,6 +16,13 @@ interface ContentCardProps {
 }
 
 export function ContentCard({ item }: ContentCardProps) {
+  // Convert markdown content to plain text by removing common markdown symbols
+  const plainTextContent = item.content
+    .replace(/[#*`_~\[\](){}]/g, '')  // Remove markdown symbols
+    .replace(/\n+/g, ' ')  // Replace multiple newlines with single space
+    .trim()
+    .slice(0, 150) + '...';  // Limit to 150 characters with ellipsis
+
   return (
     <Card className="card-hover overflow-hidden">
       <CardHeader className="pb-3">
@@ -36,7 +44,7 @@ export function ContentCard({ item }: ContentCardProps) {
       </CardHeader>
       <CardContent className="pb-3">
         <p className="text-sm text-muted-foreground line-clamp-3">
-          {item.description}
+          {plainTextContent}
         </p>
       </CardContent>
       <CardFooter className="pt-0 flex flex-wrap items-center justify-between text-xs text-muted-foreground">
