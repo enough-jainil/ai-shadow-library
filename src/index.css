@@ -1,9 +1,42 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    /* Light mode colors */
+    --background: 0 0% 98%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 195 83% 40%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 5% 45%;
+    --accent: 240 5% 96%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5% 90%;
+    --input: 240 5% 90%;
+    --ring: 195 83% 40%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-primary: 195 83% 40%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 5% 96%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 240 5% 90%;
+    --sidebar-ring: 195 83% 40%;
+  }
+  
+  .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
@@ -23,7 +56,6 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 195 83% 49%;
-    --radius: 0.5rem;
     --sidebar-background: 240 10% 3.9%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 195 83% 49%;
@@ -43,7 +75,7 @@
   }
 
   .neo-blur {
-    @apply backdrop-blur-md bg-black/40 border border-white/10 rounded-md;
+    @apply backdrop-blur-md bg-black/40 border border-white/10 rounded-md dark:bg-black/40 dark:border-white/10 light:bg-white/80 light:border-black/10;
   }
 
   .glow-text {
@@ -81,7 +113,7 @@
   }
 
   .markdown {
-    @apply prose prose-invert max-w-none prose-pre:bg-secondary prose-pre:text-foreground prose-headings:text-primary;
+    @apply prose prose-invert max-w-none prose-pre:bg-secondary prose-pre:text-foreground prose-headings:text-primary dark:prose-invert light:prose-gray;
   }
 
   .markdown pre {
@@ -90,5 +122,18 @@
 
   .markdown code {
     @apply bg-secondary/50 rounded px-1 py-0.5;
+  }
+  
+  /* Light mode specific styles */
+  :root:not(.dark) .markdown {
+    @apply prose-gray;
+  }
+  
+  :root:not(.dark) .neo-blur {
+    @apply bg-white/80 border-black/10 backdrop-blur-md;
+  }
+  
+  :root:not(.dark) .card-hover:hover {
+    @apply shadow-[0_0_15px_rgba(30,174,219,0.1)];
   }
 }

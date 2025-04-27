@@ -1,9 +1,11 @@
+
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Header() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -42,6 +44,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Button variant="ghost" className="hidden sm:flex" asChild>
             <Link to="/browse">Browse</Link>
           </Button>
