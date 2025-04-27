@@ -36,7 +36,7 @@ const formSchema = z.object({
     .transform(val => 
       val.split(",")
         .map(tag => tag.trim())
-        .filter(tag => tag)
+        .filter(tag => tag.length > 0)
     ),
 });
 

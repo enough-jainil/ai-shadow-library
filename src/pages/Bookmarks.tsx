@@ -7,11 +7,6 @@ import { ContentItem, getContentById } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { ContentCard } from "@/components/ContentCard";
 
-// Define props interface to match ContentCard's expected props
-interface ContentCardProps {
-  content: ContentItem;
-}
-
 export default function Bookmarks() {
   const { user, login, isLoading: isAuthLoading } = useGitHubAuthContext();
   const [bookmarkedContent, setBookmarkedContent] = useState<ContentItem[]>([]);
@@ -81,7 +76,7 @@ export default function Bookmarks() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {bookmarkedContent.map((item) => (
-                <ContentCard key={item.id} content={item} />
+                <ContentCard key={item.id} item={item} />
               ))}
             </div>
           )}

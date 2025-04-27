@@ -7,7 +7,7 @@ const mockClient = {
   db: (name: string) => ({
     collection: (collectionName: string) => ({
       findOne: async () => null,
-      find: async () => ({ toArray: async () => [] }),
+      find: () => ({ toArray: async () => [] }), // Return an object with toArray method directly
       insertOne: async () => ({ acknowledged: true, insertedId: "mock-id" }),
       deleteOne: async () => ({ deletedCount: 1 }),
       updateOne: async () => ({ modifiedCount: 1 }),

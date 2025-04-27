@@ -38,7 +38,7 @@ export async function getUserSubmissions(authorId: string): Promise<Submission[]
     const db = await connectToDatabase();
     const submissionsCollection = db.collection('submissions');
     
-    const submissions = await submissionsCollection.find({ authorId }).toArray();
+    const submissions = await submissionsCollection.find().toArray();
     
     // Type assertion to fix TypeScript error
     return submissions as unknown as Submission[];

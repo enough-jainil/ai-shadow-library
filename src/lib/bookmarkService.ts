@@ -13,7 +13,7 @@ export async function addBookmark(userId: string, contentId: string): Promise<bo
     const bookmarksCollection = db.collection('bookmarks');
     
     // Check if the bookmark already exists
-    const existingBookmark = await bookmarksCollection.findOne({ userId, contentId });
+    const existingBookmark = await bookmarksCollection.findOne();
     
     if (existingBookmark) {
       return false; // Bookmark already exists
@@ -38,7 +38,7 @@ export async function removeBookmark(userId: string, contentId: string): Promise
     const db = await connectToDatabase();
     const bookmarksCollection = db.collection('bookmarks');
     
-    const result = await bookmarksCollection.deleteOne({ userId, contentId });
+    const result = await bookmarksCollection.deleteOne();
     
     return result.deletedCount > 0;
   } catch (error) {
@@ -52,7 +52,7 @@ export async function getUserBookmarks(userId: string): Promise<string[]> {
     const db = await connectToDatabase();
     const bookmarksCollection = db.collection('bookmarks');
     
-    const bookmarks = await bookmarksCollection.find({ userId }).toArray();
+    const bookmarks = await bookmarksCollection.find().toArray();
     
     return bookmarks.map((bookmark: any) => bookmark.contentId);
   } catch (error) {
@@ -66,7 +66,7 @@ export async function isContentBookmarked(userId: string, contentId: string): Pr
     const db = await connectToDatabase();
     const bookmarksCollection = db.collection('bookmarks');
     
-    const bookmark = await bookmarksCollection.findOne({ userId, contentId });
+    const bookmark = await bookmarksCollection.findOne();
     
     return !!bookmark;
   } catch (error) {
