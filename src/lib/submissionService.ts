@@ -14,6 +14,8 @@ export type Submission = {
 }
 
 export async function submitContent(submission: Omit<Submission, 'createdAt' | 'status'>): Promise<string | null> {
+  if (!submission.authorId) return null;
+  
   try {
     const db = await connectToDatabase();
     const submissionsCollection = db.collection('submissions');
@@ -34,13 +36,14 @@ export async function submitContent(submission: Omit<Submission, 'createdAt' | '
 }
 
 export async function getUserSubmissions(authorId: string): Promise<Submission[]> {
+  if (!authorId) return [];
+  
   try {
     const db = await connectToDatabase();
     const submissionsCollection = db.collection('submissions');
     
-    const submissions = await submissionsCollection.find().toArray();
+    const submissions = await submissionsCollection.find({ authorId }).toArray();
     
-    // Type assertion to fix TypeScript error
     return submissions as unknown as Submission[];
   } catch (error) {
     console.error('Error getting user submissions:', error);

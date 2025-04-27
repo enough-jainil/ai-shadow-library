@@ -1,30 +1,25 @@
 
-// This is a browser-compatible MongoDB client implementation
-// For production, you should use a backend API instead of direct MongoDB access from the browser
+import { MongoClient } from 'mongodb';
 
-// Mock client for browser environments
-const mockClient = {
-  db: (name: string) => ({
-    collection: (collectionName: string) => ({
-      findOne: async () => null,
-      find: () => ({ toArray: async () => [] }), // Return an object with toArray method directly
-      insertOne: async () => ({ acknowledged: true, insertedId: "mock-id" }),
-      deleteOne: async () => ({ deletedCount: 1 }),
-      updateOne: async () => ({ modifiedCount: 1 }),
-    }),
-  }),
-  connect: async () => {},
-  close: async () => {},
-};
+const uri = "mongodb+srv://aijobsaac:aijobsaac@cluster0.d8jtc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const client = new MongoClient(uri);
 
-// Export mock DB functionality
 export async function connectToDatabase() {
-  console.log("Using mock MongoDB client for browser environment");
-  return mockClient.db("ai_shadow_library");
+  try {
+    await client.connect();
+    return client.db("ai_shadow_library");
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+    throw error;
+  }
 }
 
 export async function closeDatabaseConnection() {
-  console.log("Mock MongoDB connection closed");
+  try {
+    await client.close();
+  } catch (error) {
+    console.error("Error closing MongoDB connection:", error);
+  }
 }
 
-export default mockClient;
+export default client;
