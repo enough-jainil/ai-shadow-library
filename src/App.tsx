@@ -9,7 +9,6 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Index from "./pages/Index";
 import Browse from "./pages/Browse";
 import ContentDetail from "./pages/ContentDetail";
-// import Submit from "./pages/Submit";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
@@ -29,7 +28,6 @@ const App = () => (
               path="/content/:category/:slug"
               element={<ContentDetail />}
             />
-            {/* <Route path="/submit" element={<Submit />} /> */}
             <Route path="/about" element={<About />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -36,7 +36,13 @@ export default function Home() {
                 <Link to="/browse">Browse Library</Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link to="/submit">Submit Content</Link>
+                <a
+                  href="https://github.com/enough-jainil/ai-shadow-library/discussions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Submit Content
+                </a>
               </Button>
             </div>
           </div>
@@ -112,7 +118,13 @@ export default function Home() {
             prompt? Share it with the community anonymously.
           </p>
           <Button size="lg" asChild>
-            <Link to="/submit">Submit Content</Link>
+            <a
+              href="https://github.com/enough-jainil/ai-shadow-library/discussions"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Submit Content
+            </a>
           </Button>
         </div>
       </section>

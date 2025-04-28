@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ContentItem, categoryIcons } from "@/lib/data";
 import { formatDate, getContentUrl } from "@/lib/utils";
-import { useEffect, useState } from "react";
 import { Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 

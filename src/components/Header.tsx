@@ -54,6 +54,15 @@ export function Header() {
           <Button variant="ghost" className="hidden sm:flex" asChild>
             <Link to="/browse">Browse</Link>
           </Button>
+          <Button variant="ghost" className="hidden sm:flex" asChild>
+            <a
+              href="https://github.com/enough-jainil/ai-shadow-library/discussions"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Submit
+            </a>
+          </Button>
         </div>
       </div>
 
@@ -73,6 +82,15 @@ export function Header() {
       <nav className="container flex justify-between items-center py-1 sm:hidden border-t border-border/20">
         <Button variant="ghost" size="sm" asChild>
           <Link to="/browse">Browse</Link>
+        </Button>
+        <Button variant="ghost" size="sm" asChild>
+          <a
+            href="https://github.com/enough-jainil/ai-shadow-library/discussions"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Discuss
+          </a>
         </Button>
         <Button variant="ghost" size="sm" asChild>
           <Link to="/browse?category=jailbreak">Jailbreaks</Link>
