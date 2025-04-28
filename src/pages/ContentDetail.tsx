@@ -13,7 +13,6 @@ import { ContentCard } from "@/components/ContentCard";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Copy, Check, Share2 } from "lucide-react";
-import { TableOfContents } from "@/components/TableOfContents";
 import { useToast } from "@/hooks/use-toast";
 
 export default function ContentDetail() {
@@ -149,11 +148,6 @@ export default function ContentDetail() {
               </div>
             </div>
 
-            {/* Table of Contents (visible only on desktop) */}
-            <div className="hidden lg:block">
-              <TableOfContents />
-            </div>
-
             {/* Content Body */}
             <div className="neo-blur p-6 mb-8 relative">
               <Button
@@ -169,7 +163,7 @@ export default function ContentDetail() {
                   <Copy className="h-4 w-4" />
                 )}
               </Button>
-              <div className="markdown break-words">
+              <div className=" break-words">
                 <ReactMarkdown>{content.content}</ReactMarkdown>
               </div>
             </div>
@@ -187,11 +181,6 @@ export default function ContentDetail() {
           {/* Sidebar */}
           <aside className="col-span-12 lg:col-span-4">
             <div className="sticky top-20 space-y-6">
-              {/* Table of Contents (visible only on mobile) */}
-              <div className="lg:hidden">
-                <TableOfContents />
-              </div>
-
               {/* Related Content */}
               <div>
                 <h3 className="text-lg font-bold mb-4 font-mono">
