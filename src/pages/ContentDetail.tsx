@@ -1,4 +1,3 @@
-
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import {
@@ -13,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { ContentCard } from "@/components/ContentCard";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Copy, Check, ThumbsDown, ThumbsUp, Share2, Bookmark } from "lucide-react";
+import { Copy, Check, Share2 } from "lucide-react";
 import { TableOfContents } from "@/components/TableOfContents";
 import { useToast } from "@/hooks/use-toast";
 
@@ -24,10 +23,7 @@ export default function ContentDetail() {
   const [content, setContent] = useState<ContentItem | undefined>(undefined);
   const [relatedContent, setRelatedContent] = useState<ContentItem[]>([]);
   const [isCopied, setIsCopied] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [votes, setVotes] = useState({ up: 0, down: 0 });
-  const [userVote, setUserVote] = useState<"up" | "down" | null>(null);
-  const [readingTime, setReadingTime] = useState(""); 
+  const [readingTime, setReadingTime] = useState("");
 
   useEffect(() => {
     if (slug) {
@@ -38,16 +34,6 @@ export default function ContentDetail() {
       if (foundContent) {
         // Calculate reading time
         setReadingTime(calculateReadingTime(foundContent.content));
-        
-        // Check if content is bookmarked
-        const bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]");
-        setIsBookmarked(bookmarks.includes(foundContent.id));
-        
-        // Initialize votes (would come from API in a real app)
-        setVotes({
-          up: Math.floor(Math.random() * 100) + 10,
-          down: Math.floor(Math.random() * 20),
-        });
 
         // Redirect to the correct URL if needed
         const correctUrl = getContentUrl(
@@ -74,69 +60,20 @@ export default function ContentDetail() {
     }
   };
 
-  // Toggle bookmark
-  const toggleBookmark = () => {
-    if (!content) return;
-    
-    const bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]");
-    let newBookmarks;
-    
-    if (isBookmarked) {
-      newBookmarks = bookmarks.filter((id: string) => id !== content.id);
-      toast({
-        title: "Bookmark removed",
-        description: `"${content.title}" removed from bookmarks`,
-      });
-    } else {
-      newBookmarks = [...bookmarks, content.id];
-      toast({
-        title: "Bookmark added",
-        description: `"${content.title}" added to bookmarks`,
-      });
-    }
-    
-    localStorage.setItem("bookmarks", JSON.stringify(newBookmarks));
-    setIsBookmarked(!isBookmarked);
-  };
-
-  // Handle voting
-  const handleVote = (type: "up" | "down") => {
-    if (userVote === type) {
-      // Undo vote
-      setVotes(prev => ({
-        ...prev,
-        [type]: prev[type] - 1
-      }));
-      setUserVote(null);
-    } else {
-      // Change vote
-      setVotes(prev => {
-        const newVotes = { ...prev };
-        
-        if (userVote) {
-          newVotes[userVote] -= 1;
-        }
-        
-        newVotes[type] += 1;
-        return newVotes;
-      });
-      
-      setUserVote(type);
-    }
-  };
-
   // Share content
   const shareContent = () => {
     if (!content) return;
-    
+
     const url = window.location.href;
-    
+
     if (navigator.share) {
-      navigator.share({
-        title: content.title,
-        text: content.description,
-        url: url,
-      }).catch(console.error);
+      navigator
+        .share({
+          title: content.title,
+          text: content.description,
+          url: url,
+        })
+        .catch(console.error);
     } else {
       navigator.clipboard.writeText(url).then(() => {
         toast({
@@ -198,56 +135,25 @@ export default function ContentDetail() {
               </div>
 
               <p className="text-lg">{content.description}</p>
-              
+
               <div className="mt-6 flex items-center gap-3">
-                <div className="flex items-center gap-1">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className={userVote === "up" ? "text-primary" : ""}
-                    onClick={() => handleVote("up")}
-                  >
-                    <ThumbsUp className="mr-1 h-4 w-4" />
-                    {votes.up}
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className={userVote === "down" ? "text-primary" : ""}
-                    onClick={() => handleVote("down")}
-                  >
-                    <ThumbsDown className="mr-1 h-4 w-4" />
-                    {votes.down}
-                  </Button>
-                </div>
-                
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className={isBookmarked ? "text-primary" : ""}
-                  onClick={toggleBookmark}
-                >
-                  <Bookmark className="mr-1 h-4 w-4" />
-                  {isBookmarked ? "Bookmarked" : "Bookmark"}
-                </Button>
-                
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={shareContent}
+                  aria-label="Share content"
                 >
                   <Share2 className="mr-1 h-4 w-4" />
                   Share
                 </Button>
               </div>
             </div>
-            
+
             {/* Table of Contents (visible only on desktop) */}
             <div className="hidden lg:block">
               <TableOfContents />
             </div>
-            
+
             {/* Content Body */}
             <div className="neo-blur p-6 mb-8 relative">
               <Button
@@ -285,7 +191,7 @@ export default function ContentDetail() {
               <div className="lg:hidden">
                 <TableOfContents />
               </div>
-              
+
               {/* Related Content */}
               <div>
                 <h3 className="text-lg font-bold mb-4 font-mono">
@@ -296,18 +202,6 @@ export default function ContentDetail() {
                     <ContentCard key={item.id} item={item} />
                   ))}
                 </div>
-              </div>
-
-              {/* CTA */}
-              <div className="neo-blur p-4">
-                <h4 className="font-bold mb-2">Have similar content?</h4>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Help expand our library with your own prompts, jailbreaks, or
-                  leaked documents.
-                </p>
-                <Button asChild className="w-full">
-                  <Link to="/submit">Submit Content</Link>
-                </Button>
               </div>
             </div>
           </aside>
